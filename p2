@@ -1,0 +1,93 @@
+'''
+PART 1 - Write a program to calculate the credit card balance after one year
+        if a person only pays the minimum monthly payment required by the credit card company each month.
+
+        balance - the outstanding balance on the credit card
+        annualInterestRate - annual interest rate as a decimal
+        monthlyPaymentRate - minimum monthly payment rate as a decimal
+
+        A summary of the required math is found below:
+
+        Monthly interest rate= (Annual interest rate) / 12.0
+        Minimum monthly payment = (Minimum monthly payment rate) x (Previous balance)
+        Monthly unpaid balance = (Previous balance) - (Minimum monthly payment)
+        Updated balance each month = (Monthly unpaid balance) + (Monthly interest rate x Monthly unpaid balance)
+'''
+
+def Account(balance, air, mpr):
+
+    n = 12
+    while n:
+        mmp = balance * mpr
+        balance = balance - mmp
+        balance = balance + air*balance/12.0
+
+        n -= 1 # month counter
+        print('Month ' + str(12-n) + ': ' + str(round(balance,2)) )
+
+    return round(balance, 2)
+
+
+print('end result is ' + str(Account(484, 0.2, 0.04)))
+
+'''
+PART 2 - Now write a program that calculates the minimum fixed monthly payment needed in order pay off a credit card balance within 12 months. 
+         By a fixed monthly payment, we mean a single number which does not change each month, 
+         but instead is a constant amount that will be paid each month.
+         
+         Assume that the interest is compounded monthly according to the balance at the end of the month (after the payment for that month is made). 
+         The monthly payment must be a multiple of $10 and is the same for all months. 
+         Notice that it is possible for the balance to become negative using this payment scheme, which is okay. 
+         A summary of the required math is found below:
+
+            Monthly interest rate = (Annual interest rate) / 12.0
+            Monthly unpaid balance = (Previous balance) - (Minimum fixed monthly payment)
+            Updated balance each month = (Monthly unpaid balance) + (Monthly interest rate x Monthly unpaid balance)
+'''
+
+
+def payment(balance, air):
+
+    for x in range(10, balance, 10):
+        init = balance
+        for i in range(12):
+            init -= x
+            init = init*(1 + air/12)
+        if init <= 0:
+            return x
+
+print(str(payment(4773, 0.2)))
+
+'''
+PART 3 - using bisection search
+'''
+
+def payment(balance, air):
+
+    upper = (balance * (1 + air / 12) ** 12) / 12
+    lower = balance / 12.0
+    x = (lower + upper) / 2
+
+    def Account(mpr, to_pay):
+
+        n = 12
+        while n:
+            to_pay = to_pay - mpr
+            to_pay = to_pay + air * to_pay / 12.0
+            n -= 1  # month counter
+
+        return round(to_pay, 2)
+
+    while Account(x, balance) != 0.0:
+        if Account(x, balance) > 0:
+            lower = x
+            x = (lower + upper) / 2
+        elif Account(x, balance) < 0:
+            upper = x
+            x = (lower + upper) / 2
+        else:
+            break
+
+    return round(x, 2)
+
+print(str(payment(999999, 0.18)))
