@@ -154,9 +154,16 @@ def updateHand(hand, word):
     hand: dictionary (string -> int)    
     returns: dictionary (string -> int)
     """
-    # TO DO ... <-- Remove this comment when you code this function
+    output_dict = {}
+    word_as_list = list(word)
+    for x in hand:
+        count = 0
+        while x in word_as_list:
+            count += 1
+            word_as_list.remove(x)
+        output_dict[x] = hand[x] - count
 
-
+    return output_dict
 
 #
 # Problem #3: Test word validity
