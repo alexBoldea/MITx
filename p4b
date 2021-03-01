@@ -133,6 +133,7 @@ def playGame(wordList):
                 return False
             else:
                 print("Invalid command.")
+                answer = input("Enter u to have yourself play, c to have the computer play: ")
 
     last_hand = {}
 
